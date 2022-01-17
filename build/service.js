@@ -2,14 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("./server");
 const controllers_1 = require("./controllers");
-const seeding_1 = require("./seeding");
 const tsyringe_1 = require("tsyringe");
 (async () => {
     // 輸入資料
-    const seeder = tsyringe_1.container.resolve(seeding_1.Seeder);
-    await seeder.dbcontext.connect();
-    await seeder.seedRole();
-    await seeder.dbcontext.connection.close();
+    // const seeder = container.resolve(Seeder)
+    // await seeder.dbcontext.connect()
+    // await seeder.seedRole()
+    // await seeder.dbcontext.connection.close()
     // 註冊controllers
     const homeController = tsyringe_1.container.resolve(controllers_1.HomeController);
     const userController = tsyringe_1.container.resolve(controllers_1.UserController);

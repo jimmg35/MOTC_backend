@@ -63,17 +63,17 @@ class JwtAuthenticator {
     }
 }
 exports.default = JwtAuthenticator;
-(() => {
-    const ja = new JwtAuthenticator();
-    let token = ja.signToken({
-        _userId: "123",
-        username: "jimmg35"
-    });
-    console.log(token);
-    const aa = ja.isTokenExpired("eyJhbGciOaaaiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfdXNlcklkIjoiMTIzIiwidXNlcm5hbWUiOiJqaW1tZzM1IiwiaWF0IjoxNjQxODMxNzMxLCJleHAiOjE2NDE4MzE3MzZ9.ck8CsZ_eaaaa7AtlBwP3GnlqaoMD0sxJ70XESl922gQV2w8");
-    console.log(aa);
-    // setTimeout(() => {
-    //     const tokenStatus = ja.isTokenValid(token)
-    //     console.log(tokenStatus)
-    // }, 10000)
-})();
+// (() => {
+//     const ja = new JwtAuthenticator()
+//     let token = ja.signToken({
+//         _userId: "123",
+//         username: "jimmg35"
+//     })
+//     console.log(token)
+//     const aa = ja.isTokenExpired("eyJhbGciOaaaiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfdXNlcklkIjoiMTIzIiwidXNlcm5hbWUiOiJqaW1tZzM1IiwiaWF0IjoxNjQxODMxNzMxLCJleHAiOjE2NDE4MzE3MzZ9.ck8CsZ_eaaaa7AtlBwP3GnlqaoMD0sxJ70XESl922gQV2w8")
+//     console.log(aa)
+//     // setTimeout(() => {
+//     //     const tokenStatus = ja.isTokenValid(token)
+//     //     console.log(tokenStatus)
+//     // }, 10000)
+// })()
