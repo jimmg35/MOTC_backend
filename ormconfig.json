@@ -1,0 +1,21 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "jim60308",
+    "database": "node_test",
+    "entities": [
+        "build/entity/authentication/Role.js",
+        "build/entity/authentication/User.js",
+        "build/entity/authentication/UserRole.js"
+    ],
+    "migrations": [
+        "build/migration/*.js"
+    ],
+    "logging": false,
+    "synchronize": false,
+    "cli": {
+        "migrationsDir": "src/migration"
+    }
+}
