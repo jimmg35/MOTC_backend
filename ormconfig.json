@@ -1,14 +1,13 @@
 {
     "type": "postgres",
-    "host": "localhost",
+    "host": "140.122.82.98",
     "port": 5432,
     "username": "postgres",
-    "password": "jim60308",
-    "database": "node_test",
+    "password": "r2tadmiadc",
+    "database": "motcnode",
     "entities": [
         "build/entity/authentication/Role.js",
-        "build/entity/authentication/User.js",
-        "build/entity/authentication/UserRole.js"
+        "build/entity/authentication/User.js"
     ],
     "migrations": [
         "build/migration/*.js"

@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addMailVerification1641783475668 implements MigrationInterface {
-    name = 'addMailVerification1641783475668'
+export class initial1642730008741 implements MigrationInterface {
+    name = 'initial1642730008741'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "user" ("userId" uuid NOT NULL DEFAULT uuid_generate_v4(), "username" character varying(20) NOT NULL, "password" character varying NOT NULL, "alias" character varying(20), "email" character varying NOT NULL, "phoneNumber" character varying, "createdDate" TIMESTAMP NOT NULL DEFAULT now(), "mailConfirmationToken" character varying(128) NOT NULL, "isActive" boolean NOT NULL DEFAULT false, CONSTRAINT "UQ_78a916df40e02a9deb1c4b75edb" UNIQUE ("username"), CONSTRAINT "PK_d72ea127f30e21753c9e229891e" PRIMARY KEY ("userId"))`);
