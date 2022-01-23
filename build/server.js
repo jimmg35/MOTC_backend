@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
 require("./pre-start");
+const cors_1 = __importDefault(require("cors"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const https_1 = __importDefault(require("https"));
@@ -41,6 +42,7 @@ class Server {
         this.addMiddlewares = () => {
             this.app.use(express_1.default.urlencoded({ extended: true }));
             this.app.use(express_1.default.json());
+            this.app.use(cors_1.default());
         };
         /**
          * 用於註冊router

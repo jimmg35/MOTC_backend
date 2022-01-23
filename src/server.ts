@@ -1,4 +1,5 @@
 import './pre-start'
+import cors from 'cors'
 import fs from 'fs'
 import path from 'path'
 import https from 'https'
@@ -37,6 +38,7 @@ export class Server {
     private addMiddlewares = (): void => {
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(express.json())
+        this.app.use(cors())
     }
 
     /**
