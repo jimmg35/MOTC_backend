@@ -12,7 +12,7 @@ export default class JwtAuthenticator {
     public expireTime: number
 
     constructor() {
-        this.expireTime = 5
+        this.expireTime = 1200
     }
 
     /**

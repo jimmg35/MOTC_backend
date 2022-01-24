@@ -26,7 +26,8 @@ let AuthController = class AuthController extends BaseController_1.BaseControlle
         super();
         this.routeHttpMethod = {
             "authenticate": "POST",
-            "refresh": "POST"
+            "refresh": "POST",
+            "validate": "POST"
         };
         this.authenticate = async (req, res) => {
             const params_set = Object.assign({}, req.body);
@@ -50,6 +51,18 @@ let AuthController = class AuthController extends BaseController_1.BaseControlle
             // if(this.jwtAuthenticator.isTokenExpired(params_set.token)
             return res.status(OK).json({
                 "status": "success"
+            });
+        };
+        this.validate = async (req, res) => {
+            const params_set = Object.assign({}, req.body);
+            const status = this.jwtAuthenticator.isTokenValid(params_set.token);
+            if (status) {
+                return res.status(OK).json({
+                    "status": "token is valid"
+                });
+            }
+            return res.status(UNAUTHORIZED).json({
+                "status": "token is not valid"
             });
         };
         this.dbcontext = dbcontext;
