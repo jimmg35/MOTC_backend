@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken'
 export interface tokenPayload {
     _userId: string
     username: string
+    email: string
+    alias: string
 }
 
 export default class JwtAuthenticator {
@@ -67,13 +69,23 @@ export default class JwtAuthenticator {
      * @param token 
      * @returns 
      */
-    public isTokenValid = (token: string): boolean => {
+    public isTokenValid = (token: string): any => {
         try {
+            const status = true
             const payload: any = jwt.verify(token, process.env.JWT_SECRET as string)
-            return true
+            return { status, payload }
         } catch {
             return false
         }
+    }
+
+    /**
+     * 解析payload內容
+     * @param token 
+     */
+    public decodePayload = (token: string) => {
+        let aa = jwt.decode(token)
+        console.log(aa)
     }
 
 }

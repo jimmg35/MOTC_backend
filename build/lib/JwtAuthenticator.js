@@ -52,12 +52,21 @@ class JwtAuthenticator {
          */
         this.isTokenValid = (token) => {
             try {
+                const status = true;
                 const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-                return true;
+                return { status, payload };
             }
             catch (_a) {
                 return false;
             }
+        };
+        /**
+         * 解析payload內容
+         * @param token
+         */
+        this.decodePayload = (token) => {
+            let aa = jsonwebtoken_1.default.decode(token);
+            console.log(aa);
         };
         this.expireTime = 1200;
     }

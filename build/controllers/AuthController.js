@@ -32,11 +32,13 @@ let AuthController = class AuthController extends BaseController_1.BaseControlle
         this.authenticate = async (req, res) => {
             const params_set = Object.assign({}, req.body);
             const user_repository = this.dbcontext.connection.getRepository(User_1.User);
-            const user = await user_repository.findOne({ username: params_set.username });
+            const user = await user_repository.findOne({ email: params_set.email });
             if ((user === null || user === void 0 ? void 0 : user.password) == tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(params_set.password))) {
                 const token = this.jwtAuthenticator.signToken({
                     _userId: user.userId,
-                    username: user.username
+                    username: user.username,
+                    email: user.email,
+                    alias: user.alias
                 });
                 return res.status(OK).json({
                     "token": token
@@ -55,10 +57,10 @@ let AuthController = class AuthController extends BaseController_1.BaseControlle
         };
         this.validate = async (req, res) => {
             const params_set = Object.assign({}, req.body);
-            const status = this.jwtAuthenticator.isTokenValid(params_set.token);
+            const { status, payload } = this.jwtAuthenticator.isTokenValid(params_set.token);
             if (status) {
                 return res.status(OK).json({
-                    "status": "token is valid"
+                    "payload": payload
                 });
             }
             return res.status(UNAUTHORIZED).json({
