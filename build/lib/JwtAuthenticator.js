@@ -59,7 +59,7 @@ class JwtAuthenticator {
                 return false;
             }
         };
-        this.expireTime = 5;
+        this.expireTime = 1200;
     }
 }
 exports.default = JwtAuthenticator;

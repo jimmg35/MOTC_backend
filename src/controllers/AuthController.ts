@@ -21,7 +21,8 @@ export default class AuthController extends BaseController {
     public jwtAuthenticator: JwtAuthenticator
     public routeHttpMethod: { [methodName: string]: HTTPMETHOD; } = {
         "authenticate": "POST",
-        "refresh": "POST"
+        "refresh": "POST",
+        "validate": "POST"
     }
 
     constructor(dbcontext: WebApiContext, jwtAuthenticator: JwtAuthenticator) {
@@ -66,5 +67,18 @@ export default class AuthController extends BaseController {
             "status": "success"
         })
 
+    }
+
+    public validate = async (req: Request, res: Response) => {
+        const params_set = { ...req.body }
+        const status = this.jwtAuthenticator.isTokenValid(params_set.token)
+        if (status) {
+            return res.status(OK).json({
+                "status": "token is valid"
+            })
+        }
+        return res.status(UNAUTHORIZED).json({
+            "status": "token is not valid"
+        })
     }
 }
