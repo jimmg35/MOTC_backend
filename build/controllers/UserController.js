@@ -110,9 +110,7 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             if (user.mailConfirmationToken == params_set.verificationToken) {
                 user.isActive = true;
                 await user_repository.save(user);
-                return res.status(OK).json({
-                    "status": "account has been verified!"
-                });
+                return res.redirect(process.env.FRONTEND_DOMAIN);
             }
             return res.status(BAD_REQUEST).json({
                 "status": "wrong verificationToken"
