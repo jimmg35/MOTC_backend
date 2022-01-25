@@ -9,9 +9,6 @@ import sha256, { Hash, HMAC } from "fast-sha256"
 import StatusCodes from 'http-status-codes'
 import util from "tweetnacl-util"
 
-
-
-
 const { BAD_REQUEST, CREATED, OK, CONFLICT, NOT_FOUND, FORBIDDEN } = StatusCodes
 
 @autoInjectable()

@@ -141,7 +141,7 @@ export const sendVerifcationEmail = (email: string, username: string, verificati
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                         <tr>
                             <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                                <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <img src=" https://img.icons8.com/clouds/100/000000/handshake.png" width="125" height="120" style="display: block; border: 0px;" />
+                                <h1 style="font-size: 48px; font-weight: 400; margin: 2;">歡迎!</h1> <img src=" https://img.icons8.com/clouds/100/000000/handshake.png" width="125" height="120" style="display: block; border: 0px;" />
                             </td>
                         </tr>
                     </table>
@@ -152,7 +152,7 @@ export const sendVerifcationEmail = (email: string, username: string, verificati
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                         <tr>
                             <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                                <p style="margin: 0;">We're excited to have you get started. First, you need to confirm your account. Just press the button below.</p>
+                                <p style="margin: 0;">歡迎加入MOTC，請點擊以下連結進行帳戶驗證!</p>
                             </td>
                         </tr>
                         <tr>
@@ -162,7 +162,7 @@ export const sendVerifcationEmail = (email: string, username: string, verificati
                                         <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                             <table border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
-                                                    <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href=${process.env.DOMAIN}api/User/verify?username=${username}&verificationToken=${verificationToken} target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Confirm Account</a></td>
+                                                    <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href=${process.env.DOMAIN}api/User/verify?username=${username}&verificationToken=${verificationToken} target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">驗證帳戶</a></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -172,7 +172,7 @@ export const sendVerifcationEmail = (email: string, username: string, verificati
                         </tr> <!-- COPY -->
                         <tr>
                             <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                                <p style="margin: 0;">Cheers,<br>MT4 Team</p>
+                                <p style="margin: 0;">Cheers,<br>MOTC Team</p>
                             </td>
                         </tr>
                     </table>

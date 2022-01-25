@@ -38,22 +38,32 @@ export default class AuthController extends BaseController {
         const user_repository = this.dbcontext.connection.getRepository(User)
         const user = await user_repository.findOne({ email: params_set.email as string })
 
-        if (user?.password == util.encodeBase64(sha256(params_set.password))) {
+        if (user == undefined) {
+            return res.status(UNAUTHORIZED).json({
+                "status": "cant't find this user"
+            })
+        }
 
+        if (user?.isActive == false) {
+            return res.status(UNAUTHORIZED).json({
+                "status": "account hasn't been activated"
+            })
+        }
+
+        if (user?.password == util.encodeBase64(sha256(params_set.password)) && user.isActive == true) {
             const token = this.jwtAuthenticator.signToken({
                 _userId: user.userId,
                 username: user.username,
                 email: user.email,
                 alias: user.alias
             })
-
             return res.status(OK).json({
                 "token": token
             })
         }
 
         return res.status(UNAUTHORIZED).json({
-            "status": "login failed"
+            "status": "wrong password or account"
         })
     }
 
