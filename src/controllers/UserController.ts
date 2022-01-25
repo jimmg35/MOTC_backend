@@ -18,6 +18,8 @@ export default class UserController extends BaseController {
     public dbcontext: WebApiContext
     public routeHttpMethod: { [methodName: string]: HTTPMETHOD; } = {
         "register": "POST",
+        "isEmailUsed": "GET",
+        "isUserExists": "GET",
         "sendVerifyEmail": "GET",
         "verify": "GET",
         "resetPassword": "POST"
@@ -55,6 +57,38 @@ export default class UserController extends BaseController {
             })
         }
 
+    }
+
+    public isEmailUsed = async (req: Request, res: Response) => {
+        const params_set = { ...req.query }
+
+        const user_repository = this.dbcontext.connection.getRepository(User)
+        const user = await user_repository.findOne({ email: params_set.email as string })
+
+        if (user != undefined) {
+            return res.status(OK).json({
+                "status": "email has been used!"
+            })
+        }
+        return res.status(NOT_FOUND).json({
+            "status": "email hasn't been used!"
+        })
+    }
+
+    public isUserExists = async (req: Request, res: Response) => {
+        const params_set = { ...req.query }
+
+        const user_repository = this.dbcontext.connection.getRepository(User)
+        const user = await user_repository.findOne({ username: params_set.username as string })
+
+        if (user != undefined) {
+            return res.status(OK).json({
+                "status": "user exists!"
+            })
+        }
+        return res.status(NOT_FOUND).json({
+            "status": "user doesn't exists!"
+        })
     }
 
     public sendVerifyEmail = async (req: Request, res: Response) => {

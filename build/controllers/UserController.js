@@ -27,6 +27,8 @@ let UserController = class UserController extends BaseController_1.BaseControlle
         super();
         this.routeHttpMethod = {
             "register": "POST",
+            "isEmailUsed": "GET",
+            "isUserExists": "GET",
             "sendVerifyEmail": "GET",
             "verify": "GET",
             "resetPassword": "POST"
@@ -53,6 +55,32 @@ let UserController = class UserController extends BaseController_1.BaseControlle
                     "status": "fail"
                 });
             }
+        };
+        this.isEmailUsed = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ email: params_set.email });
+            if (user != undefined) {
+                return res.status(OK).json({
+                    "status": "email has been used!"
+                });
+            }
+            return res.status(NOT_FOUND).json({
+                "status": "email hasn't been used!"
+            });
+        };
+        this.isUserExists = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ username: params_set.username });
+            if (user != undefined) {
+                return res.status(OK).json({
+                    "status": "user exists!"
+                });
+            }
+            return res.status(NOT_FOUND).json({
+                "status": "user doesn't exists!"
+            });
         };
         this.sendVerifyEmail = async (req, res) => {
             const params_set = Object.assign({}, req.query);
