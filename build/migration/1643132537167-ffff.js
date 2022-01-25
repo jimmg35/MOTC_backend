@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initial1642730008741 = void 0;
-class initial1642730008741 {
+exports.ffff1643132537167 = void 0;
+class ffff1643132537167 {
     constructor() {
-        this.name = 'initial1642730008741';
+        this.name = 'ffff1643132537167';
     }
     async up(queryRunner) {
         await queryRunner.query(`CREATE TABLE "user" ("userId" uuid NOT NULL DEFAULT uuid_generate_v4(), "username" character varying(20) NOT NULL, "password" character varying NOT NULL, "alias" character varying(20), "email" character varying NOT NULL, "phoneNumber" character varying, "createdDate" TIMESTAMP NOT NULL DEFAULT now(), "mailConfirmationToken" character varying(128) NOT NULL, "isActive" boolean NOT NULL DEFAULT false, CONSTRAINT "UQ_78a916df40e02a9deb1c4b75edb" UNIQUE ("username"), CONSTRAINT "PK_d72ea127f30e21753c9e229891e" PRIMARY KEY ("userId"))`);
@@ -24,4 +24,4 @@ class initial1642730008741 {
         await queryRunner.query(`DROP TABLE "user"`);
     }
 }
-exports.initial1642730008741 = initial1642730008741;
+exports.ffff1643132537167 = ffff1643132537167;
