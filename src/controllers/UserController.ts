@@ -1,4 +1,4 @@
-import { generateVerificationToken, sendVerifcationEmail } from "./util"
+import { generateVerificationToken, sendVerifcationEmail, sendPasswordResetEmail } from "./util"
 import { BaseController, HTTPMETHOD } from './BaseController'
 import { Role } from "../entity/authentication/Role"
 import { User } from "../entity/authentication/User"
@@ -8,6 +8,7 @@ import { autoInjectable } from "tsyringe"
 import sha256, { Hash, HMAC } from "fast-sha256"
 import StatusCodes from 'http-status-codes'
 import util from "tweetnacl-util"
+import { NOTFOUND } from "dns"
 
 const { BAD_REQUEST, CREATED, OK, CONFLICT, NOT_FOUND, FORBIDDEN } = StatusCodes
 
@@ -22,7 +23,9 @@ export default class UserController extends BaseController {
         "isUserExists": "GET",
         "sendVerifyEmail": "GET",
         "verify": "GET",
-        "resetPassword": "POST"
+        "resetPassword": "POST",
+        "sendPasswordResetEmail": "GET",
+        "verifyPasswordResetEmail": "GET"
     }
 
     constructor(dbcontext: WebApiContext) {
@@ -161,6 +164,42 @@ export default class UserController extends BaseController {
         }
 
 
+    }
+
+    public sendPasswordResetEmail = async (req: Request, res: Response) => {
+        const params_set = { ...req.query }
+
+        const user_repository = this.dbcontext.connection.getRepository(User)
+        const user = await user_repository.findOne({ email: params_set.email as string })
+
+        if (user === undefined) {
+            return res.status(NOT_FOUND).json({
+                "status": "user not found!"
+            })
+        }
+
+        if (user?.isActive === false) {
+            return res.status(FORBIDDEN).json({
+                "status": "please verify the email!"
+            })
+        }
+
+        // 更新信箱token
+        user.mailConfirmationToken = generateVerificationToken(128)
+        await user_repository.save(user)
+
+        // 發信
+        sendPasswordResetEmail(user.email, user.mailConfirmationToken)
+
+        return res.status(OK).json({
+            "status": "password reset email sent"
+        })
+    }
+
+    public verifyPasswordResetEmail = async (req: Request, res: Response) => {
+        const params_set = { ...req.query }
+
+        return res.redirect(process.env.FRONTEND_DOMAIN as string)
     }
 
 }

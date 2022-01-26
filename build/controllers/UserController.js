@@ -31,7 +31,9 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             "isUserExists": "GET",
             "sendVerifyEmail": "GET",
             "verify": "GET",
-            "resetPassword": "POST"
+            "resetPassword": "POST",
+            "sendPasswordResetEmail": "GET",
+            "verifyPasswordResetEmail": "GET"
         };
         this.register = async (req, res) => {
             const params_set = Object.assign({}, req.body);
@@ -139,6 +141,33 @@ let UserController = class UserController extends BaseController_1.BaseControlle
                     "status": "password changed successfully"
                 });
             }
+        };
+        this.sendPasswordResetEmail = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ email: params_set.email });
+            if (user === undefined) {
+                return res.status(NOT_FOUND).json({
+                    "status": "user not found!"
+                });
+            }
+            if ((user === null || user === void 0 ? void 0 : user.isActive) === false) {
+                return res.status(FORBIDDEN).json({
+                    "status": "please verify the email!"
+                });
+            }
+            // 更新信箱token
+            user.mailConfirmationToken = util_1.generateVerificationToken(128);
+            await user_repository.save(user);
+            // 發信
+            util_1.sendPasswordResetEmail(user.email, user.mailConfirmationToken);
+            return res.status(OK).json({
+                "status": "password reset email sent"
+            });
+        };
+        this.verifyPasswordResetEmail = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            return res.redirect(process.env.FRONTEND_DOMAIN);
         };
         this.dbcontext = dbcontext;
         this.dbcontext.connect();
