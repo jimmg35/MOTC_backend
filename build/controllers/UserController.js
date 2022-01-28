@@ -122,7 +122,7 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             const params_set = Object.assign({}, req.body);
             const user_repository = this.dbcontext.connection.getRepository(User_1.User);
             const user = await user_repository.createQueryBuilder("user")
-                .where("user.username = :username", { username: params_set.username })
+                .where("user.email = :email", { email: params_set.email })
                 .getOne();
             if (user == undefined) {
                 return res.status(NOT_FOUND).json({
@@ -136,7 +136,7 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             }
             else {
                 user.password = tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(params_set.newPassword));
-                user_repository.save(user);
+                await user_repository.save(user);
                 return res.status(OK).json({
                     "status": "password changed successfully"
                 });
@@ -158,16 +158,34 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             }
             // 更新信箱token
             user.mailConfirmationToken = util_1.generateVerificationToken(128);
+            // 重設暫時密碼
+            const tempPassword = Math.random().toString(36).slice(-8);
+            const encoded_once = tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(tempPassword));
+            const encoded_twice = tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(encoded_once));
+            user.password = encoded_twice;
             await user_repository.save(user);
             // 發信
-            util_1.sendPasswordResetEmail(user.email, user.mailConfirmationToken);
+            util_1.sendPasswordResetEmail(user.email, user.mailConfirmationToken, tempPassword);
             return res.status(OK).json({
                 "status": "password reset email sent"
             });
         };
         this.verifyPasswordResetEmail = async (req, res) => {
             const params_set = Object.assign({}, req.query);
-            return res.redirect(process.env.FRONTEND_DOMAIN);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ email: params_set.email });
+            if (user === undefined) {
+                return res.status(NOT_FOUND).json({
+                    "status": "user not found!"
+                });
+            }
+            if (user.mailConfirmationToken === params_set.verificationToken) {
+                let passwordResetURL = process.env.FRONTEND_DOMAIN + '#/passwordreset';
+                return res.redirect(passwordResetURL);
+            }
+            return res.status(FORBIDDEN).json({
+                "status": "Wrong verification token!"
+            });
         };
         this.dbcontext = dbcontext;
         this.dbcontext.connect();
