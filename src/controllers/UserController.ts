@@ -2,6 +2,7 @@ import { generateVerificationToken, sendVerifcationEmail, sendPasswordResetEmail
 import { BaseController, HTTPMETHOD } from './BaseController'
 import { Role } from "../entity/authentication/Role"
 import { User } from "../entity/authentication/User"
+import { UserThumbnail } from "../entity/authentication/UserThumbnail"
 import { WebApiContext } from "../dbcontext"
 import { Request, Response } from 'express'
 import { autoInjectable } from "tsyringe"
@@ -9,14 +10,16 @@ import sha256, { Hash, HMAC } from "fast-sha256"
 import StatusCodes from 'http-status-codes'
 import util from "tweetnacl-util"
 import { NOTFOUND } from "dns"
+import JwtAuthenticator from "../lib/JwtAuthenticator"
 
-const { BAD_REQUEST, CREATED, OK, CONFLICT, NOT_FOUND, FORBIDDEN } = StatusCodes
+const { BAD_REQUEST, CREATED, OK, CONFLICT, NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = StatusCodes
 
 @autoInjectable()
 export default class UserController extends BaseController {
 
 
     public dbcontext: WebApiContext
+    public jwtAuthenticator: JwtAuthenticator
     public routeHttpMethod: { [methodName: string]: HTTPMETHOD; } = {
         "register": "POST",
         "isEmailUsed": "GET",
@@ -25,13 +28,16 @@ export default class UserController extends BaseController {
         "verify": "GET",
         "resetPassword": "POST",
         "sendPasswordResetEmail": "GET",
-        "verifyPasswordResetEmail": "GET"
+        "verifyPasswordResetEmail": "GET",
+        "addThumbnail": "POST",
+        "getThumbnail": "POST"
     }
 
-    constructor(dbcontext: WebApiContext) {
+    constructor(dbcontext: WebApiContext, jwtAuthenticator: JwtAuthenticator) {
         super()
         this.dbcontext = dbcontext
         this.dbcontext.connect()
+        this.jwtAuthenticator = jwtAuthenticator
     }
 
 
@@ -219,6 +225,41 @@ export default class UserController extends BaseController {
         }
         return res.status(FORBIDDEN).json({
             "status": "Wrong verification token!"
+        })
+    }
+
+    public addThumbnail = async (req: Request, res: Response) => {
+        const params_set = { ...req.body }
+        const { status, payload } = this.jwtAuthenticator.isTokenValid(params_set.token)
+        if (status) {
+            const user_repository = this.dbcontext.connection.getRepository(User)
+            const userThumbnail_repository = this.dbcontext.connection.getRepository(UserThumbnail)
+            const user = await user_repository.findOne({ userId: payload._userId })
+            const userThumbnail = new UserThumbnail()
+            userThumbnail.thumbnail = params_set.thumbnailBase64
+            userThumbnail.user = user as User
+            await userThumbnail_repository.save(userThumbnail)
+            return res.status(OK).json({
+                "status": "thumbnail upload success"
+            })
+        }
+        return res.status(UNAUTHORIZED).json({
+            "status": "token is not valid"
+        })
+    }
+
+    public getThumbnail = async (req: Request, res: Response) => {
+        const params_set = { ...req.body }
+        const { status, payload } = this.jwtAuthenticator.isTokenValid(params_set.token)
+        if (status) {
+            const user_repository = this.dbcontext.connection.getRepository(User)
+            const user = await user_repository.createQueryBuilder("user")
+                .where("user.userId = :userId", { userId: payload._userId })
+                .leftJoinAndSelect("user.thumbnails", "userthumbnail").getOne()
+            return res.status(OK).json(user?.thumbnails[user?.thumbnails.length - 1])
+        }
+        return res.status(UNAUTHORIZED).json({
+            "status": "token is not valid"
         })
     }
 }

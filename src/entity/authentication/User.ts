@@ -5,6 +5,7 @@ import {
     CreateDateColumn,
     OneToOne,
     JoinColumn,
+    OneToMany,
     ManyToMany,
     JoinTable
 } from "typeorm"
@@ -12,6 +13,7 @@ import {
 import { IsEmail, IsNotEmpty, Length } from "class-validator"
 
 import { Role } from "./Role"
+import { UserThumbnail } from "./UserThumbnail"
 
 @Entity({ name: 'user' })
 export class User {
@@ -50,4 +52,7 @@ export class User {
 
     @Column({ default: false })
     isActive: boolean
+
+    @OneToMany(() => UserThumbnail, userthumbnail => userthumbnail.user)
+    thumbnails: UserThumbnail[]
 }
