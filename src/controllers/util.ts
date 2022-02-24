@@ -10,8 +10,7 @@ export const generateVerificationToken = (length: number): string => {
     return result
 }
 
-export const sendVerifcationEmail = (email: string, username: string, verificationToken: string): void => {
-
+export const sendVerifcationEmail = async (email: string, username: string, verificationToken: string): Promise<boolean> => {
     let transport = NodeMailer.createTransport({
         service: "Gmail",
         auth: {
@@ -162,7 +161,7 @@ export const sendVerifcationEmail = (email: string, username: string, verificati
                                         <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                             <table border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
-                                                    <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href=${process.env.Mail_Redirect_Domain}api/User/verify?username=${username}&verificationToken=${verificationToken} target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">驗證帳戶</a></td>
+                                                    <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href=${process.env.Mail_Redirect_Domain}api/User/verify?username=${username}&verificationToken=${verificationToken} target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Confirm Account</a></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -213,12 +212,16 @@ export const sendVerifcationEmail = (email: string, username: string, verificati
         html: html_template
     }
 
-    transport.sendMail(mailOptions, (error, response) => {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log("Verification mail sent!")
-        }
+    return new Promise((resolve, reject) => {
+        transport.sendMail(mailOptions, async (error, response) => {
+            if (error) {
+                console.log(error)
+                resolve(false)
+            } else {
+                console.log("Verification mail sent!")
+                resolve(true)
+            }
+        })
     })
 }
 
@@ -437,5 +440,4 @@ export const sendPasswordResetEmail = (email: string, verificationToken: string,
             console.log("Password reset mail sent!")
         }
     })
-
 }

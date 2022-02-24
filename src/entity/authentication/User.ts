@@ -7,10 +7,12 @@ import {
     JoinColumn,
     OneToMany,
     ManyToMany,
-    JoinTable
+    JoinTable,
+    OneToMany
 } from "typeorm"
 
 import { IsEmail, IsNotEmpty, Length } from "class-validator"
+import { UserThumbnail } from "./UserThumbnail"
 
 import { Role } from "./Role"
 import { UserThumbnail } from "./UserThumbnail"

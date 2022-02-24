@@ -14,7 +14,7 @@ export default class JwtAuthenticator {
     public expireTime: number
 
     constructor() {
-        this.expireTime = 1200
+        this.expireTime = 3600
     }
 
     /**
@@ -28,15 +28,6 @@ export default class JwtAuthenticator {
         )
         return token
     }
-
-    // public signToken = (payload: tokenPayload, aa: number): string => {
-    //     const token = jwt.sign(
-    //         payload,
-    //         process.env.JWT_SECRET as string,
-    //         { expiresIn: this.expireTime }
-    //     )
-    //     return token
-    // }
 
     /**
      * 計算Token剩餘時間

@@ -107,10 +107,17 @@ export default class UserController extends BaseController {
         const user = await user_repository.findOne({ username: params_set.username as string })
 
         if (user != undefined) {
-            sendVerifcationEmail(user.email, user.username, user.mailConfirmationToken)
-            return res.status(OK).json({
-                "status": "verification email sent"
+            const isSuccessed = await sendVerifcationEmail(user.email, user.username, user.mailConfirmationToken)
+
+            if (isSuccessed) {
+                return res.status(OK).json({
+                    "status": "verification email sent"
+                })
+            }
+            return res.status(500).json({
+                "status": "SMTP server shut down"
             })
+
         } else {
             return res.status(NOT_FOUND).json({
                 "status": "can't find this user"

@@ -69,12 +69,6 @@ export default class AuthController extends BaseController {
 
     public refresh = async (req: Request, res: Response) => {
         const params_set = { ...req.body }
-
-
-
-        // if(this.jwtAuthenticator.isTokenExpired(params_set.token)
-
-
         return res.status(OK).json({
             "status": "success"
         })
