@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
+const UserThumbnail_1 = require("./UserThumbnail");
 const Role_1 = require("./Role");
 let User = class User {
 };
@@ -60,6 +61,10 @@ __decorate([
     typeorm_1.Column({ default: false }),
     __metadata("design:type", Boolean)
 ], User.prototype, "isActive", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => UserThumbnail_1.UserThumbnail, userthumbnail => userthumbnail.user),
+    __metadata("design:type", Array)
+], User.prototype, "thumbnails", void 0);
 User = __decorate([
     typeorm_1.Entity({ name: 'user' })
 ], User);

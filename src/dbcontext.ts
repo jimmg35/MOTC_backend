@@ -15,8 +15,8 @@ export interface IDbConfig {
 export interface IDbContext {
     dbConfig: IDbConfig
     connection: Connection
-    connect(): void
-    parseConfig(): void
+    connect (): void
+    parseConfig (): void
 }
 
 export class DbContext implements IDbContext {
@@ -56,7 +56,8 @@ export class WebApiContext extends DbContext {
                 "database": this.dbConfig.database,
                 "entities": [
                     "build/entity/authentication/Role.js",
-                    "build/entity/authentication/User.js"
+                    "build/entity/authentication/User.js",
+                    "build/entity/authentication/UserThumbnail.js"
                 ],
                 "migrations": [
                     "build/migration/*.js"

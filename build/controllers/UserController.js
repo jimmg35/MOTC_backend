@@ -16,20 +16,28 @@ const util_1 = require("./util");
 const BaseController_1 = require("./BaseController");
 const Role_1 = require("../entity/authentication/Role");
 const User_1 = require("../entity/authentication/User");
+const UserThumbnail_1 = require("../entity/authentication/UserThumbnail");
 const dbcontext_1 = require("../dbcontext");
 const tsyringe_1 = require("tsyringe");
 const fast_sha256_1 = __importDefault(require("fast-sha256"));
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const tweetnacl_util_1 = __importDefault(require("tweetnacl-util"));
-const { BAD_REQUEST, CREATED, OK, CONFLICT, NOT_FOUND, FORBIDDEN } = http_status_codes_1.default;
+const JwtAuthenticator_1 = __importDefault(require("../lib/JwtAuthenticator"));
+const { BAD_REQUEST, CREATED, OK, CONFLICT, NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = http_status_codes_1.default;
 let UserController = class UserController extends BaseController_1.BaseController {
-    constructor(dbcontext) {
+    constructor(dbcontext, jwtAuthenticator) {
         super();
         this.routeHttpMethod = {
             "register": "POST",
+            "isEmailUsed": "GET",
+            "isUserExists": "GET",
             "sendVerifyEmail": "GET",
             "verify": "GET",
-            "resetPassword": "POST"
+            "resetPassword": "POST",
+            "sendPasswordResetEmail": "GET",
+            "verifyPasswordResetEmail": "GET",
+            "addThumbnail": "POST",
+            "getThumbnail": "POST"
         };
         this.register = async (req, res) => {
             const params_set = Object.assign({}, req.body);
@@ -54,14 +62,45 @@ let UserController = class UserController extends BaseController_1.BaseControlle
                 });
             }
         };
+        this.isEmailUsed = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ email: params_set.email });
+            if (user != undefined) {
+                return res.status(OK).json({
+                    "status": "email has been used!"
+                });
+            }
+            return res.status(NOT_FOUND).json({
+                "status": "email hasn't been used!"
+            });
+        };
+        this.isUserExists = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ username: params_set.username });
+            if (user != undefined) {
+                return res.status(OK).json({
+                    "status": "user exists!"
+                });
+            }
+            return res.status(NOT_FOUND).json({
+                "status": "user doesn't exists!"
+            });
+        };
         this.sendVerifyEmail = async (req, res) => {
             const params_set = Object.assign({}, req.query);
             const user_repository = this.dbcontext.connection.getRepository(User_1.User);
             const user = await user_repository.findOne({ username: params_set.username });
             if (user != undefined) {
-                util_1.sendVerifcationEmail(user.email, user.username, user.mailConfirmationToken);
-                return res.status(OK).json({
-                    "status": "verification email sent"
+                const isSuccessed = await util_1.sendVerifcationEmail(user.email, user.username, user.mailConfirmationToken);
+                if (isSuccessed) {
+                    return res.status(OK).json({
+                        "status": "verification email sent"
+                    });
+                }
+                return res.status(500).json({
+                    "status": "SMTP server shut down"
                 });
             }
             else {
@@ -82,9 +121,7 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             if (user.mailConfirmationToken == params_set.verificationToken) {
                 user.isActive = true;
                 await user_repository.save(user);
-                return res.status(OK).json({
-                    "status": "account has been verified!"
-                });
+                return res.redirect(process.env.FRONTEND_DOMAIN);
             }
             return res.status(BAD_REQUEST).json({
                 "status": "wrong verificationToken"
@@ -94,7 +131,7 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             const params_set = Object.assign({}, req.body);
             const user_repository = this.dbcontext.connection.getRepository(User_1.User);
             const user = await user_repository.createQueryBuilder("user")
-                .where("user.username = :username", { username: params_set.username })
+                .where("user.email = :email", { email: params_set.email })
                 .getOne();
             if (user == undefined) {
                 return res.status(NOT_FOUND).json({
@@ -108,18 +145,97 @@ let UserController = class UserController extends BaseController_1.BaseControlle
             }
             else {
                 user.password = tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(params_set.newPassword));
-                user_repository.save(user);
+                await user_repository.save(user);
                 return res.status(OK).json({
                     "status": "password changed successfully"
                 });
             }
         };
+        this.sendPasswordResetEmail = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ email: params_set.email });
+            if (user === undefined) {
+                return res.status(NOT_FOUND).json({
+                    "status": "user not found!"
+                });
+            }
+            if ((user === null || user === void 0 ? void 0 : user.isActive) === false) {
+                return res.status(FORBIDDEN).json({
+                    "status": "please verify the email!"
+                });
+            }
+            // 更新信箱token
+            user.mailConfirmationToken = util_1.generateVerificationToken(128);
+            // 重設暫時密碼
+            const tempPassword = Math.random().toString(36).slice(-8);
+            const encoded_once = tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(tempPassword));
+            const encoded_twice = tweetnacl_util_1.default.encodeBase64(fast_sha256_1.default(encoded_once));
+            user.password = encoded_twice;
+            await user_repository.save(user);
+            // 發信
+            util_1.sendPasswordResetEmail(user.email, user.mailConfirmationToken, tempPassword);
+            return res.status(OK).json({
+                "status": "password reset email sent"
+            });
+        };
+        this.verifyPasswordResetEmail = async (req, res) => {
+            const params_set = Object.assign({}, req.query);
+            const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+            const user = await user_repository.findOne({ email: params_set.email });
+            if (user === undefined) {
+                return res.status(NOT_FOUND).json({
+                    "status": "user not found!"
+                });
+            }
+            if (user.mailConfirmationToken === params_set.verificationToken) {
+                let passwordResetURL = process.env.FRONTEND_DOMAIN + '#/passwordreset';
+                return res.redirect(passwordResetURL);
+            }
+            return res.status(FORBIDDEN).json({
+                "status": "Wrong verification token!"
+            });
+        };
+        this.addThumbnail = async (req, res) => {
+            const params_set = Object.assign({}, req.body);
+            const { status, payload } = this.jwtAuthenticator.isTokenValid(params_set.token);
+            if (status) {
+                const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+                const userThumbnail_repository = this.dbcontext.connection.getRepository(UserThumbnail_1.UserThumbnail);
+                const user = await user_repository.findOne({ userId: payload._userId });
+                const userThumbnail = new UserThumbnail_1.UserThumbnail();
+                userThumbnail.thumbnail = params_set.thumbnailBase64;
+                userThumbnail.user = user;
+                await userThumbnail_repository.save(userThumbnail);
+                return res.status(OK).json({
+                    "status": "thumbnail upload success"
+                });
+            }
+            return res.status(UNAUTHORIZED).json({
+                "status": "token is not valid"
+            });
+        };
+        this.getThumbnail = async (req, res) => {
+            const params_set = Object.assign({}, req.body);
+            const { status, payload } = this.jwtAuthenticator.isTokenValid(params_set.token);
+            if (status) {
+                const user_repository = this.dbcontext.connection.getRepository(User_1.User);
+                const user = await user_repository.createQueryBuilder("user")
+                    .where("user.userId = :userId", { userId: payload._userId })
+                    .leftJoinAndSelect("user.thumbnails", "userthumbnail").getOne();
+                return res.status(OK).json(user === null || user === void 0 ? void 0 : user.thumbnails[(user === null || user === void 0 ? void 0 : user.thumbnails.length) - 1]);
+            }
+            return res.status(UNAUTHORIZED).json({
+                "status": "token is not valid"
+            });
+        };
         this.dbcontext = dbcontext;
         this.dbcontext.connect();
+        this.jwtAuthenticator = jwtAuthenticator;
     }
 };
 UserController = __decorate([
     tsyringe_1.autoInjectable(),
-    __metadata("design:paramtypes", [dbcontext_1.WebApiContext])
+    __metadata("design:paramtypes", [dbcontext_1.WebApiContext, JwtAuthenticator_1.default])
 ], UserController);
 exports.default = UserController;
