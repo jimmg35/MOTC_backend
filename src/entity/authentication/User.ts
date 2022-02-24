@@ -7,15 +7,13 @@ import {
     JoinColumn,
     OneToMany,
     ManyToMany,
-    JoinTable,
-    OneToMany
+    JoinTable
 } from "typeorm"
 
 import { IsEmail, IsNotEmpty, Length } from "class-validator"
 import { UserThumbnail } from "./UserThumbnail"
 
 import { Role } from "./Role"
-import { UserThumbnail } from "./UserThumbnail"
 
 @Entity({ name: 'user' })
 export class User {
