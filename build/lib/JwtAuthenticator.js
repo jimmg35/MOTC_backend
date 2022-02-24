@@ -13,14 +13,6 @@ class JwtAuthenticator {
             const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: this.expireTime });
             return token;
         };
-        // public signToken = (payload: tokenPayload, aa: number): string => {
-        //     const token = jwt.sign(
-        //         payload,
-        //         process.env.JWT_SECRET as string,
-        //         { expiresIn: this.expireTime }
-        //     )
-        //     return token
-        // }
         /**
          * 計算Token剩餘時間
          * @param token
@@ -52,14 +44,23 @@ class JwtAuthenticator {
          */
         this.isTokenValid = (token) => {
             try {
+                const status = true;
                 const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-                return true;
+                return { status, payload };
             }
             catch (_a) {
                 return false;
             }
         };
-        this.expireTime = 1200;
+        /**
+         * 解析payload內容
+         * @param token
+         */
+        this.decodePayload = (token) => {
+            let aa = jsonwebtoken_1.default.decode(token);
+            console.log(aa);
+        };
+        this.expireTime = 3600;
     }
 }
 exports.default = JwtAuthenticator;

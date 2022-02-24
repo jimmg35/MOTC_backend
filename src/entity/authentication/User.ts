@@ -6,10 +6,12 @@ import {
     OneToOne,
     JoinColumn,
     ManyToMany,
-    JoinTable
+    JoinTable,
+    OneToMany
 } from "typeorm"
 
 import { IsEmail, IsNotEmpty, Length } from "class-validator"
+import { UserThumbnail } from "./UserThumbnail"
 
 import { Role } from "./Role"
 
@@ -50,4 +52,7 @@ export class User {
 
     @Column({ default: false })
     isActive: boolean
+
+    @OneToMany(() => UserThumbnail, userthumbnail => userthumbnail.user)
+    thumbnails: UserThumbnail[]
 }

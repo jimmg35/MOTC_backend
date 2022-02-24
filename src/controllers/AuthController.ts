@@ -36,33 +36,39 @@ export default class AuthController extends BaseController {
         const params_set = { ...req.body }
 
         const user_repository = this.dbcontext.connection.getRepository(User)
-        const user = await user_repository.findOne({ username: params_set.username as string })
+        const user = await user_repository.findOne({ email: params_set.email as string })
 
-        if (user?.password == util.encodeBase64(sha256(params_set.password))) {
+        if (user == undefined) {
+            return res.status(UNAUTHORIZED).json({
+                "status": "cant't find this user"
+            })
+        }
 
+        if (user?.isActive == false) {
+            return res.status(UNAUTHORIZED).json({
+                "status": "account hasn't been activated"
+            })
+        }
+
+        if (user?.password == util.encodeBase64(sha256(params_set.password)) && user.isActive == true) {
             const token = this.jwtAuthenticator.signToken({
                 _userId: user.userId,
-                username: user.username
+                username: user.username,
+                email: user.email,
+                alias: user.alias
             })
-
             return res.status(OK).json({
                 "token": token
             })
         }
 
         return res.status(UNAUTHORIZED).json({
-            "status": "login failed"
+            "status": "wrong password or account"
         })
     }
 
     public refresh = async (req: Request, res: Response) => {
         const params_set = { ...req.body }
-
-
-
-        // if(this.jwtAuthenticator.isTokenExpired(params_set.token)
-
-
         return res.status(OK).json({
             "status": "success"
         })
@@ -71,10 +77,10 @@ export default class AuthController extends BaseController {
 
     public validate = async (req: Request, res: Response) => {
         const params_set = { ...req.body }
-        const status = this.jwtAuthenticator.isTokenValid(params_set.token)
+        const { status, payload } = this.jwtAuthenticator.isTokenValid(params_set.token)
         if (status) {
             return res.status(OK).json({
-                "status": "token is valid"
+                "payload": payload
             })
         }
         return res.status(UNAUTHORIZED).json({

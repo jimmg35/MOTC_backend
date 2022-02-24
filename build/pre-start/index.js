@@ -17,7 +17,7 @@ const command_line_args_1 = __importDefault(require("command-line-args"));
         }
     ]);
     const envConfig = dotenv_1.default.config({
-        path: path_1.default.join(__dirname, `../../envConfig/${options.env}.env`),
+        path: path_1.default.join(__dirname, `../../envConfig/production.env`),
     });
     if (envConfig.error) {
         throw envConfig.error;
