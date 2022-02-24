@@ -5,9 +5,9 @@ import {
     CreateDateColumn,
     OneToOne,
     JoinColumn,
+    OneToMany,
     ManyToMany,
-    JoinTable,
-    OneToMany
+    JoinTable
 } from "typeorm"
 
 import { IsEmail, IsNotEmpty, Length } from "class-validator"
