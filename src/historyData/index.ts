@@ -44,6 +44,7 @@ const upzipFile = async (props: { path: string, deviceId: string, date: string }
     writer.close()
     fs.unlinkSync(props.path)
   } catch (err) {
+    console.log(err)
     console.log(`${props.deviceId} | ${props.date} | decompress failed`)
   }
 }
@@ -66,7 +67,7 @@ const getHistoryCSV = async (props: { deviceId: string, date: string }) => {
 
 (async () => {
 
-  const startDate = new Date('2021-01-01')
+  const startDate = new Date('2022-01-01')
   const connection = await createConnection()
   const fixedSensorInfoRepo = await connection.getRepository(FixedSensorInfo)
   const fixedSensorInfos = await fixedSensorInfoRepo.find()
