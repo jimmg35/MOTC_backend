@@ -2,78 +2,83 @@ import { error } from "console"
 import { createConnection, Connection, ConnectionOptions } from "typeorm"
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions"
 import { Role } from "./entity/authentication/Role"
+import { User } from "./entity/authentication/User"
+import { UserThumbnail } from "./entity/authentication/UserThumbnail"
+import { FixedSensorInfo } from "./entity/motc/FixedSensorInfo"
+
 
 export interface IDbConfig {
-    type: string
-    host: string
-    port: number
-    username: string
-    password: string
-    database: string
+  type: string
+  host: string
+  port: number
+  username: string
+  password: string
+  database: string
 }
 
 export interface IDbContext {
-    dbConfig: IDbConfig
-    connection: Connection
-    connect (): void
-    parseConfig (): void
+  dbConfig: IDbConfig
+  connection: Connection
+  connect (): void
+  parseConfig (): void
 }
 
 export class DbContext implements IDbContext {
-    public dbConfig: IDbConfig
-    public connection: Connection
-    constructor() {
-        this.parseConfig()
+  public dbConfig: IDbConfig
+  public connection: Connection
+  constructor() {
+    this.parseConfig()
+  }
+  public connect = async () => { }
+  public parseConfig = () => {
+    console.log(this.constructor.name + "_TYPE")
+    console.log(process.env[this.constructor.name + "_TYPE"])
+    this.dbConfig = {
+      type: process.env[this.constructor.name + "_TYPE"]!,
+      host: process.env[this.constructor.name + "_HOST"]!,
+      port: Number(process.env[this.constructor.name + "_PORT"]!),
+      username: process.env[this.constructor.name + "_USERNAME"]!,
+      password: process.env[this.constructor.name + "_PASSWORD"]!,
+      database: process.env[this.constructor.name + "_DATABASE"]!
     }
-    public connect = async () => { }
-    public parseConfig = () => {
-        this.dbConfig = {
-            type: process.env[this.constructor.name + "_TYPE"]!,
-            host: process.env[this.constructor.name + "_HOST"]!,
-            port: Number(process.env[this.constructor.name + "_PORT"]!),
-            username: process.env[this.constructor.name + "_USERNAME"]!,
-            password: process.env[this.constructor.name + "_PASSWORD"]!,
-            database: process.env[this.constructor.name + "_DATABASE"]!
-        }
-    }
+  }
 }
 
 
 export class WebApiContext extends DbContext {
 
-    constructor() {
-        super()
-    }
+  constructor() {
+    super()
+  }
 
-    public connect = async () => {
-        try {
-            this.connection = await createConnection({
-                "type": this.dbConfig.type as PostgresConnectionOptions['type'],
-                "host": this.dbConfig.host,
-                "port": this.dbConfig.port,
-                "username": this.dbConfig.username,
-                "password": this.dbConfig.password,
-                "database": this.dbConfig.database,
-                "entities": [
-                    "build/entity/authentication/Role.js",
-                    "build/entity/authentication/User.js",
-                    "build/entity/authentication/UserThumbnail.js"
-                ],
-                "migrations": [
-                    "build/migration/*.js"
-                ],
-                "logging": false,
-                "synchronize": false,
-                "cli": {
-                    "migrationsDir": "src/migration"
-                }
-            })
-        } catch (error: unknown) {
-            console.log("database connection failed! ")
-            throw error
+  public connect = async () => {
+    try {
+      console.log(this.dbConfig)
+      this.connection = await createConnection({
+        "type": this.dbConfig.type as PostgresConnectionOptions['type'],
+        "host": this.dbConfig.host,
+        "port": this.dbConfig.port,
+        "username": this.dbConfig.username,
+        "password": this.dbConfig.password,
+        "database": this.dbConfig.database,
+        "entities": [
+          Role, User, UserThumbnail, FixedSensorInfo
+        ],
+        "migrations": [
+          "build/migration/*.js"
+        ],
+        "logging": false,
+        "synchronize": false,
+        "cli": {
+          "migrationsDir": "src/migration"
         }
-
+      })
+    } catch (error: unknown) {
+      console.log("database connection failed! ")
+      throw error
     }
+
+  }
 }
 
 // // 輸入假資料

@@ -1,25 +1,25 @@
 import NodeMailer from 'nodemailer'
 
 export const generateVerificationToken = (length: number): string => {
-    let result = ''
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let charactersLength = characters.length
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    return result
+  let result = ''
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let charactersLength = characters.length
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
 }
 
 export const sendVerifcationEmail = async (email: string, username: string, verificationToken: string): Promise<boolean> => {
-    let transport = NodeMailer.createTransport({
-        service: "Gmail",
-        auth: {
-            user: process.env.MailServer_account,
-            pass: process.env.MailServer_password,
-        }
-    })
+  let transport = NodeMailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.MailServer_account,
+      pass: process.env.MailServer_password,
+    }
+  })
 
-    let html_template = `<!DOCTYPE html>
+  let html_template = `<!DOCTYPE html>
     <html>
     <head>
         <title></title>
@@ -205,37 +205,37 @@ export const sendVerifcationEmail = async (email: string, username: string, veri
 
     </html>`
 
-    let mailOptions = {
-        from: process.env.MailServer_from,
-        to: email,
-        subject: "Email confirmation",
-        html: html_template
-    }
+  let mailOptions = {
+    from: process.env.MailServer_from,
+    to: email,
+    subject: "Email confirmation",
+    html: html_template
+  }
 
-    return new Promise((resolve, reject) => {
-        transport.sendMail(mailOptions, async (error, response) => {
-            if (error) {
-                console.log(error)
-                resolve(false)
-            } else {
-                console.log("Verification mail sent!")
-                resolve(true)
-            }
-        })
+  return new Promise((resolve, reject) => {
+    transport.sendMail(mailOptions, async (error, response) => {
+      if (error) {
+        console.log(error)
+        resolve(false)
+      } else {
+        console.log("Verification mail sent!")
+        resolve(true)
+      }
     })
+  })
 }
 
 export const sendPasswordResetEmail = (email: string, verificationToken: string, tempPassword: string): void => {
 
-    let transport = NodeMailer.createTransport({
-        service: "Gmail",
-        auth: {
-            user: process.env.MailServer_account,
-            pass: process.env.MailServer_password,
-        }
-    })
+  let transport = NodeMailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.MailServer_account,
+      pass: process.env.MailServer_password,
+    }
+  })
 
-    let html_template = `<!DOCTYPE html>
+  let html_template = `<!DOCTYPE html>
     <html>
     <head>
         <title></title>
@@ -426,18 +426,18 @@ export const sendPasswordResetEmail = (email: string, verificationToken: string,
 
     </html>`
 
-    let mailOptions = {
-        from: process.env.MailServer_from,
-        to: email,
-        subject: "Password reset",
-        html: html_template
-    }
+  let mailOptions = {
+    from: process.env.MailServer_from,
+    to: email,
+    subject: "Password reset",
+    html: html_template
+  }
 
-    transport.sendMail(mailOptions, (error, response) => {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log("Password reset mail sent!")
-        }
-    })
+  transport.sendMail(mailOptions, (error, response) => {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log("Password reset mail sent!")
+    }
+  })
 }

@@ -6,16 +6,19 @@
     "password": "r2tadmiadc",
     "database": "motcnode",
     "entities": [
-        "build/entity/authentication/Role.js",
-        "build/entity/authentication/User.js",
-        "build/entity/authentication/UserThumbnail.js"
+        "src/entity/**/*.ts"
     ],
     "migrations": [
-        "build/migration/*.js"
+        "src/migration/**/*.ts"
+    ],
+    "subscribers": [
+        "src/subscriber/**/*.ts"
     ],
     "logging": false,
     "synchronize": false,
     "cli": {
-        "migrationsDir": "src/migration"
+        "entitiesDir": "src/entity",
+        "migrationsDir": "src/migration",
+        "subscribersDir": "src/subscriber"
     }
 }
