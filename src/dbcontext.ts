@@ -5,7 +5,9 @@ import { Role } from "./entity/authentication/Role"
 import { User } from "./entity/authentication/User"
 import { UserThumbnail } from "./entity/authentication/UserThumbnail"
 import { FixedSensorInfo } from "./entity/motc/FixedSensorInfo"
-
+import { ProjectsInfo } from "./entity/motc/ProjectsInfo"
+import { RealTimePm25 } from "./entity/motc/RealTimeEntity/RealTimePm25"
+import { RealTimeVoc } from "./entity/motc/RealTimeEntity/RealTimeVoc"
 
 export interface IDbConfig {
   type: string
@@ -31,8 +33,6 @@ export class DbContext implements IDbContext {
   }
   public connect = async () => { }
   public parseConfig = () => {
-    console.log(this.constructor.name + "_TYPE")
-    console.log(process.env[this.constructor.name + "_TYPE"])
     this.dbConfig = {
       type: process.env[this.constructor.name + "_TYPE"]!,
       host: process.env[this.constructor.name + "_HOST"]!,
@@ -53,7 +53,6 @@ export class WebApiContext extends DbContext {
 
   public connect = async () => {
     try {
-      console.log(this.dbConfig)
       this.connection = await createConnection({
         "type": this.dbConfig.type as PostgresConnectionOptions['type'],
         "host": this.dbConfig.host,
@@ -62,7 +61,8 @@ export class WebApiContext extends DbContext {
         "password": this.dbConfig.password,
         "database": this.dbConfig.database,
         "entities": [
-          Role, User, UserThumbnail, FixedSensorInfo
+          Role, User, UserThumbnail, FixedSensorInfo, ProjectsInfo,
+          RealTimePm25, RealTimeVoc
         ],
         "migrations": [
           "build/migration/*.js"

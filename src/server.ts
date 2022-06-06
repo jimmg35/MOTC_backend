@@ -8,11 +8,13 @@ import { IController } from './controllers/BaseController'
 import { autoInjectSubRoutes } from './controllers/BaseController'
 import swaggerUi from 'swagger-ui-express'
 import YAML from 'yamljs'
+import IResident from './residents/BaseResident'
 
 const swaggerDocument = YAML.load(path.resolve(__dirname, '../envConfig/swagger.yml'))
 
 interface IServerParam {
-  controllers: Array<IController>
+  controllers: IController[]
+  residents: IResident[]
 }
 
 export class Server {
@@ -34,6 +36,7 @@ export class Server {
       options.controllers
     )
     this.bindRouter()
+    this.startResidentPrograms(options.residents)
   }
 
   /**
@@ -63,6 +66,12 @@ export class Server {
     controllers.forEach((controller: IController, index: number) => {
       autoInjectSubRoutes(controller)
       this.routerBundler.use(controller.routerName, controller.getRouter())
+    })
+  }
+
+  public startResidentPrograms = (residents: IResident[]) => {
+    residents.forEach((resident, index) => {
+      resident.start()
     })
   }
 
