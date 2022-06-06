@@ -1,0 +1,48 @@
+openapi: 3.0.0
+
+info:
+  title: MOTC API
+  description: motc RESTful API in Node.js with TypeScript.
+  version: 0.1.9
+
+servers:
+  - url: http://localhost:86/api
+    description: Testing local server
+  - url: http://140.122.82.98:86/api
+    description: Production server
+
+paths:
+
+  /Auth/authenticate:
+    post:
+      tags: 
+        - Auth
+      summary: 使用者驗證.
+      consumes:
+        - application/x-www-form-urlencoded
+      description: 於登入時使用
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+
+                email:
+                  required: true
+                  default: jim60308@gmail.com
+                  type: string
+                  description: 電子郵件
+                
+                password:
+                  required: true
+                  default: NUdCc7RBRte0zaUpPAQd079JltCRUpDhKTNQ4jZul/I=
+                  type: string
+                  description: 密碼
+      responses:
+        '200':    # status code
+          description: accessToken
+          content:
+            application/json:
+              schema: 
+                type: object
