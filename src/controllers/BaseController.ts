@@ -36,7 +36,6 @@ export class BaseController implements IController {
   }
 
   public bindRouter_HiddenMethod = (routeName: string, routeHandler: any, httpMethod: HTTPMETHOD): void => {
-    // this._router.get("/index", this.index)
     switch (httpMethod) {
       case "GET":
         this._router.get('/' + routeName, routeHandler)
@@ -76,7 +75,7 @@ export class BaseController implements IController {
 export const autoInjectSubRoutes = (controller: IController) => {
   const listMethods = (controller: IController): Array<string> => {
     const output: Array<string> = []
-    for (var member in controller) {
+    for (let member in controller) {
       //@ts-ignore
       if (typeof controller[member] == "function") {
         if (controller.hasOwnProperty(member)) {

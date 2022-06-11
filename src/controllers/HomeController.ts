@@ -6,6 +6,12 @@ import StatusCodes from 'http-status-codes'
 
 const { BAD_REQUEST, CREATED, OK, CONFLICT } = StatusCodes
 
+function dataMethod () {
+  console.log("wwwwww")
+  return (target: any, propertyKey: string, descriptor?: TypedPropertyDescriptor<any>) => {
+
+  }
+}
 @autoInjectable()
 export default class HomeController extends BaseController {
 
@@ -13,13 +19,22 @@ export default class HomeController extends BaseController {
   public dbcontext: WebApiContext
   public routeHttpMethod: { [methodName: string]: HTTPMETHOD; } = {
     "get": "GET",
-    "post": "POST"
+    "post": "POST",
+    "tests": "GET"
   }
 
-  constructor(dbcontext: WebApiContext) {
+  // constructor(dbcontext: WebApiContext) {
+  //   super()
+  //   this.dbcontext = dbcontext
+  //   this.dbcontext.connect()
+  // }
+  constructor() {
     super()
-    this.dbcontext = dbcontext
-    this.dbcontext.connect()
+  }
+
+  @dataMethod()
+  public tests = async (req: Request, res: Response) => {
+    return res.status(OK).json({ status: 'success' })
   }
 
   public get = async (req: Request, res: Response) => {
