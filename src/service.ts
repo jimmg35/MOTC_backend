@@ -21,10 +21,10 @@ import RealTimeProcess from "./residents/RealTimeProcess"
   const userController = container.resolve(UserController)
   const authController = container.resolve(AuthController)
   // 註冊residents
-  const realTimeProcess = container.resolve(RealTimeProcess)
+  // const realTimeProcess = container.resolve(RealTimeProcess)
   const server = new Server({
     controllers: [userController, authController],
-    residents: [realTimeProcess]
+    residents: []
   })
 
   // 啟動後端伺服器

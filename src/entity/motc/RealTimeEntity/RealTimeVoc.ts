@@ -1,5 +1,6 @@
 import { Column, Entity, Index } from 'typeorm'
 import { UpdateDateColumn } from 'typeorm'
+import { Point } from 'geojson'
 
 @Entity('RealTime_VOC', { schema: 'public' })
 export class RealTimeVoc {
@@ -14,6 +15,12 @@ export class RealTimeVoc {
   @Column("text", { name: 'value', nullable: true })
   value: number | null
 
-  @Column("geography", { name: "coordinate", nullable: true })
-  coordinate: string | null
+  @Index({ spatial: true })
+  @Column({
+    type: 'geography',
+    spatialFeatureType: 'Point',
+    srid: 4326,
+    nullable: true
+  })
+  coordinate: Point
 }
