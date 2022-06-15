@@ -1,7 +1,7 @@
 import { Server } from "./server"
 import {
   UserController,
-  AuthController
+  AuthController, FixedSensorController
 } from './controllers'
 import { container } from "tsyringe"
 import sha256 from "fast-sha256"
@@ -20,10 +20,12 @@ import RealTimeProcess from "./residents/RealTimeProcess"
   // 註冊controllers
   const userController = container.resolve(UserController)
   const authController = container.resolve(AuthController)
+  const fixedSensorController = container.resolve(FixedSensorController)
+
   // 註冊residents
   // const realTimeProcess = container.resolve(RealTimeProcess)
   const server = new Server({
-    controllers: [userController, authController],
+    controllers: [userController, authController, fixedSensorController],
     residents: []
   })
 

@@ -9,6 +9,7 @@ import { ProjectsInfo } from "./entity/motc/ProjectsInfo"
 import { RealTimePm25 } from "./entity/motc/RealTimeEntity/RealTimePm25"
 import { RealTimeVoc } from "./entity/motc/RealTimeEntity/RealTimeVoc"
 
+
 export interface IDbConfig {
   type: string
   host: string
@@ -73,6 +74,7 @@ export class WebApiContext extends DbContext {
           "migrationsDir": "src/migration"
         }
       })
+      console.log("database connected ")
     } catch (error: unknown) {
       console.log("database connection failed! ")
       throw error

@@ -21,7 +21,8 @@ export default class RealTimeProcess implements BaseResident {
   public dbcontext: WebApiContext
   public mqtter: Mqtter
   public projects: ProjectsInfo[]
-  public RealTimeRepos: { [key: string]: Repository<any> }
+  public pm25Repo: Repository<RealTimePm25>
+  public vocRepo: Repository<RealTimePm25>
 
   constructor(dbcontext: WebApiContext, mqtter: Mqtter) {
     this.dbcontext = dbcontext
@@ -39,10 +40,8 @@ export default class RealTimeProcess implements BaseResident {
   }
 
   public getRealTimeRepos = async () => {
-    this.RealTimeRepos = {
-      'pm2_5': this.dbcontext.connection.getRepository(RealTimePm25),
-      'voc': this.dbcontext.connection.getRepository(RealTimeVoc)
-    }
+    this.pm25Repo = this.dbcontext.connection.getRepository(RealTimePm25)
+    this.vocRepo = this.dbcontext.connection.getRepository(RealTimeVoc)
   }
 
   public getProjectsInfo = async () => {
@@ -67,8 +66,7 @@ export default class RealTimeProcess implements BaseResident {
 
     let repo: Repository<any> | undefined = undefined
     if (result.id === 'pm2_5') {
-      repo = this.RealTimeRepos[result.id] as Repository<RealTimePm25>
-      const record = await repo.find({
+      const record = await this.pm25Repo.find({
         where: {
           deviceId: result.deviceId
         }
@@ -81,10 +79,19 @@ export default class RealTimeProcess implements BaseResident {
           type: 'Point',
           coordinates: [result.lon, result.lat]
         }
-        await repo.save(realTimePm25Row)
-      } else { // upd ate row
-
+        await this.pm25Repo.save(realTimePm25Row)
+      } else { // update row
+        const rowToUpdate = record[0]
+        if (rowToUpdate) {
+          rowToUpdate.value = Number(result.value[0])
+          rowToUpdate.coordinate = {
+            type: 'Point',
+            coordinates: [result.lon, result.lat]
+          }
+          await this.pm25Repo.save(rowToUpdate)
+        }
       }
+
     }
   }
 }
