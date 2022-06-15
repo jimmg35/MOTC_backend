@@ -12,10 +12,10 @@ export class FixedRealTime {
   @UpdateDateColumn()
   updateTime: Date
 
-  @Column("text", { name: 'pm25Value', nullable: true })
+  @Column("text", { name: 'pm25Value', nullable: true, default: '0' })
   pm25Value: number | null
 
-  @Column("text", { name: 'vocValue', nullable: true })
+  @Column("text", { name: 'vocValue', nullable: true, default: '0' })
   vocValue: number | null
 
   @Index({ spatial: true })

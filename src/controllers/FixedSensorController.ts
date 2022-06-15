@@ -33,7 +33,7 @@ export default class FixedSensorController extends BaseController {
     )
 
 
-    return res.status(OK).json(result)
+    return res.status(OK).json(result[0]['json_build_object'])
   }
 
 }

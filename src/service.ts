@@ -24,6 +24,8 @@ import RealTimeProcess from "./residents/RealTimeProcess"
 
   // 註冊residents
   // const realTimeProcess = container.resolve(RealTimeProcess)
+
+  // bundle server
   const server = new Server({
     controllers: [userController, authController, fixedSensorController],
     residents: []
