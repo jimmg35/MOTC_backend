@@ -1,7 +1,7 @@
 import { Server } from "./server"
 import {
   UserController,
-  AuthController, FixedSensorController
+  AuthController, FixedSensorController, MobileSensorController
 } from './controllers'
 import { container } from "tsyringe"
 import sha256 from "fast-sha256"
@@ -21,14 +21,17 @@ import RealTimeProcess from "./residents/RealTimeProcess"
   const userController = container.resolve(UserController)
   const authController = container.resolve(AuthController)
   const fixedSensorController = container.resolve(FixedSensorController)
+  const mobileSensorController = container.resolve(MobileSensorController)
 
   // 註冊residents
-  // const realTimeProcess = container.resolve(RealTimeProcess)
+  const realTimeProcess = container.resolve(RealTimeProcess)
 
   // bundle server
   const server = new Server({
-    controllers: [userController, authController, fixedSensorController],
-    residents: []
+    controllers: [
+      userController, authController,
+      fixedSensorController, mobileSensorController],
+    residents: [realTimeProcess]
   })
 
   // 啟動後端伺服器
