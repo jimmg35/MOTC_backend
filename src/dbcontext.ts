@@ -8,7 +8,8 @@ import { FixedSensorInfo } from "./entity/motc/FixedSensorInfo"
 import { ProjectsInfo } from "./entity/motc/ProjectsInfo"
 import { RealTimePm25 } from "./entity/motc/RealTimeEntity/RealTimePm25"
 import { RealTimeVoc } from "./entity/motc/RealTimeEntity/RealTimeVoc"
-
+import { FixedRealTime } from "./entity/motc/RealTimeEntity/FixedRealTime"
+import { MobileRealTime } from "./entity/motc/RealTimeEntity/MobileRealTime"
 
 export interface IDbConfig {
   type: string
@@ -63,7 +64,7 @@ export class WebApiContext extends DbContext {
         "database": this.dbConfig.database,
         "entities": [
           Role, User, UserThumbnail, FixedSensorInfo, ProjectsInfo,
-          RealTimePm25, RealTimeVoc
+          RealTimePm25, RealTimeVoc, FixedRealTime, MobileRealTime
         ],
         "migrations": [
           "build/migration/*.js"

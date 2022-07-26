@@ -2,8 +2,8 @@ import { Column, Entity, Index } from 'typeorm'
 import { UpdateDateColumn } from 'typeorm'
 import { Point } from 'geojson'
 
-@Entity('FixedRealTime', { schema: 'public' })
-export class FixedRealTime {
+@Entity('MobileRealTime', { schema: 'public' })
+export class MobileRealTime {
 
   @Column("text", { primary: true, name: 'deviceId' })
   deviceId: string
@@ -12,8 +12,8 @@ export class FixedRealTime {
   @UpdateDateColumn()
   updateTime: Date
 
-  @Column("text", { name: 'pm25Value', nullable: true, default: '0' })
-  pm25Value: number | null
+  @Column("text", { name: 'pm25UartValue', nullable: true, default: '0' })
+  pm25UartValue: number | null
 
   @Column("text", { name: 'vocValue', nullable: true, default: '0' })
   vocValue: number | null
