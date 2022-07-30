@@ -2,8 +2,8 @@ import { Column, Entity, Index } from 'typeorm'
 import { UpdateDateColumn } from 'typeorm'
 import { Point } from 'geojson'
 
-@Entity('MobileRealTime', { schema: 'public' })
-export class MobileRealTime {
+@Entity('MobileHistory', { schema: 'public' })
+export class MobileHistory {
 
   @Column("text", { primary: true, name: 'deviceId' })
   deviceId: string

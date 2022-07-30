@@ -60,7 +60,7 @@ export default class RealTimeProcess implements BaseResident {
   public subscribeProjectsTopic = async () => {
     for (let i = 0; i < this.projects.length; i++) {
       if (this.projects[i].projectId === '1156') {
-        await this.mqtter.subscribe(this.projects[i], this.insertMobileData2Db)
+        await this.mqtter.subscribe(this.projects[i], this.dumpMobileData2Db)
         continue
       }
       await this.mqtter.subscribe(this.projects[i], this.insertFixedData2Db)
@@ -99,34 +99,256 @@ export default class RealTimeProcess implements BaseResident {
     }
   }
 
-  public insertMobileData2Db = async (topic: string, msg: Buffer) => {
+  public dumpMobileData2Db = async (topic: string, msg: Buffer) => {
     const result: IDeviceResponse = JSON.parse(msg.toString())
-    if (result.id === 'pm2_5_uart') {
-      const record = await this.mobileRepo.find({
-        where: {
-          deviceId: result.deviceId
+
+    const record = await this.mobileRepo.find({
+      where: {
+        deviceId: result.deviceId
+      }
+    })
+    if (record.length === 0) {
+      if (result.id === 'pm2_5_uart') {
+        this._insertMobileUart(result)
+      }
+      if (result.id === 'voc') {
+        this._insertMobileVoc(result)
+      }
+      if (result.id === 'pm2_5_i2c') {
+        this._insertMobileI2c(result)
+      }
+      if (result.id === 'co') {
+        this._insertMobileCo(result)
+      }
+      if (result.id === 'temperature') {
+        this._insertMobileTemp(result)
+      }
+      if (result.id === 'humidity') {
+        this._insertMobileHum(result)
+      }
+      if (result.id === 'sfm_flow') {
+        this._insertMobileFlow(result)
+      }
+      if (result.id === 'speed') {
+        this._insertMobileSpeed(result)
+      }
+    } else {
+      const rowToUpdate = record[0]
+      if (rowToUpdate) {
+        if (result.id === 'pm2_5_uart') {
+          this._updateMobileUart(rowToUpdate, result)
         }
-      })
-      if (record.length === 0) { // insert row
-        const mobileRealTime = new MobileRealTime()
-        mobileRealTime.deviceId = result.deviceId
-        mobileRealTime.pm25UartValue = Number(result.value[0])
-        mobileRealTime.coordinate = {
-          type: 'Point',
-          coordinates: [result.lon, result.lat]
+        if (result.id === 'voc') {
+          this._updateMobileVoc(rowToUpdate, result)
         }
-        await this.mobileRepo.save(mobileRealTime)
-      } else { // update row
-        const rowToUpdate = record[0]
-        if (rowToUpdate) {
-          rowToUpdate.pm25UartValue = Number(result.value[0])
-          rowToUpdate.coordinate = {
-            type: 'Point',
-            coordinates: [result.lon, result.lat]
-          }
-          await this.mobileRepo.save(rowToUpdate)
+        if (result.id === 'pm2_5_i2c') {
+          this._updateMobileI2c(rowToUpdate, result)
+        }
+        if (result.id === 'co') {
+          this._updateMobileCo(rowToUpdate, result)
+        }
+        if (result.id === 'temperature') {
+          this._updateMobileTemp(rowToUpdate, result)
+        }
+        if (result.id === 'humidity') {
+          this._updateMobileHum(rowToUpdate, result)
+        }
+        if (result.id === 'sfm_flow') {
+          this._updateMobileFlow(rowToUpdate, result)
+        }
+        if (result.id === 'speed') {
+          this._updateMobileSpeed(rowToUpdate, result)
         }
       }
     }
+
+
+    // if (result.id === 'pm2_5_uart') {
+    //   const record = await this.mobileRepo.find({
+    //     where: {
+    //       deviceId: result.deviceId
+    //     }
+    //   })
+    //   if (record.length === 0) { // insert row
+    //     const mobileRealTime = new MobileRealTime()
+    //     mobileRealTime.deviceId = result.deviceId
+    //     mobileRealTime.pm25UartValue = Number(result.value[0])
+    //     mobileRealTime.coordinate = {
+    //       type: 'Point',
+    //       coordinates: [result.lon, result.lat]
+    //     }
+    //     await this.mobileRepo.save(mobileRealTime)
+    //   } else { // update row
+    //     const rowToUpdate = record[0]
+    //     if (rowToUpdate) {
+    //       rowToUpdate.pm25UartValue = Number(result.value[0])
+    //       rowToUpdate.coordinate = {
+    //         type: 'Point',
+    //         coordinates: [result.lon, result.lat]
+    //       }
+    //       await this.mobileRepo.save(rowToUpdate)
+    //     }
+    //   }
+    // }
+  }
+
+  private _insertMobileVoc = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.vocValue = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileVoc = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.vocValue = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileUart = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.pm25UartValue = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileUart = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.pm25UartValue = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileI2c = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.pm25I2cValue = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileI2c = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.pm25I2cValue = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileCo = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.coValue = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileCo = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.coValue = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileTemp = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.temperature = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileTemp = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.temperature = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileHum = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.humidity = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileHum = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.humidity = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileFlow = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.flow = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileFlow = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.flow = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
+  }
+
+  private _insertMobileSpeed = async (result: IDeviceResponse) => {
+    const mobileRealTime = new MobileRealTime()
+    mobileRealTime.deviceId = result.deviceId
+    mobileRealTime.speed = Number(result.value[0])
+    mobileRealTime.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(mobileRealTime)
+  }
+
+  private _updateMobileSpeed = async (rowToUpdate: MobileRealTime, result: IDeviceResponse) => {
+    rowToUpdate.speed = Number(result.value[0])
+    rowToUpdate.coordinate = {
+      type: 'Point',
+      coordinates: [result.lon, result.lat]
+    }
+    await this.mobileRepo.save(rowToUpdate)
   }
 }

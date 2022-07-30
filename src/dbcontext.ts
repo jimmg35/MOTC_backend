@@ -10,6 +10,7 @@ import { RealTimePm25 } from "./entity/motc/RealTimeEntity/RealTimePm25"
 import { RealTimeVoc } from "./entity/motc/RealTimeEntity/RealTimeVoc"
 import { FixedRealTime } from "./entity/motc/RealTimeEntity/FixedRealTime"
 import { MobileRealTime } from "./entity/motc/RealTimeEntity/MobileRealTime"
+import { MobileHistory } from "./entity/motc/RealTimeEntity/MobileHistory"
 
 export interface IDbConfig {
   type: string
@@ -64,7 +65,8 @@ export class WebApiContext extends DbContext {
         "database": this.dbConfig.database,
         "entities": [
           Role, User, UserThumbnail, FixedSensorInfo, ProjectsInfo,
-          RealTimePm25, RealTimeVoc, FixedRealTime, MobileRealTime
+          RealTimePm25, RealTimeVoc, FixedRealTime, MobileRealTime,
+          MobileHistory
         ],
         "migrations": [
           "build/migration/*.js"
