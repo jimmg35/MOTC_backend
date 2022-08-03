@@ -98,21 +98,65 @@ const getHistoryCSV = async (props: { deviceId: string, date: string }) => {
   const taipeiDeviceIds = [
     '11913957916', '11914563346', '11913243605', '11913766175', '11913148504'
   ]
+  for (let i = 0; i < taipeiDeviceIds.length; i++) {
+    const deviceID = taipeiDeviceIds[i]
+    const startDate = new Date('2021-09-16')
+    for (let j = 0; j < 54; j++) {
+      const dateString = moment(startDate).add(j, 'days').format('YYYY-MM-DD')
+      await getHistoryCSV({
+        deviceId: deviceID,
+        date: dateString
+      })
+    }
+  }
 
   // 火鳥 fireBirdDeviceIds
   const fireBirdDeviceIds = [
     '11890764360', '11913629180', '11953389447'
   ]
+  for (let i = 0; i < fireBirdDeviceIds.length; i++) {
+    const deviceID = fireBirdDeviceIds[i]
+    const startDate = new Date('2021-09-27')
+    for (let j = 0; j < 1; j++) {
+      const dateString = moment(startDate).add(j, 'days').format('YYYY-MM-DD')
+      await getHistoryCSV({
+        deviceId: deviceID,
+        date: dateString
+      })
+    }
+  }
 
   // 中壢、平鎮工業區 industryDeviceIds
   const industryDeviceIds = [
     '11914648549', '11891040633', '11891278317'
   ]
+  for (let i = 0; i < industryDeviceIds.length; i++) {
+    const deviceID = industryDeviceIds[i]
+    const startDate = new Date('2021-08-12')
+    for (let j = 0; j < 183; j++) {
+      const dateString = moment(startDate).add(j, 'days').format('YYYY-MM-DD')
+      await getHistoryCSV({
+        deviceId: deviceID,
+        date: dateString
+      })
+    }
+  }
 
   // 台南鹽水蜂炮 tainanDeviceIds
   const deviceIds = [
     '11891040633', '11891278317', '11913321910', '11914648549', '11953725576'
   ]
+  for (let i = 0; i < deviceIds.length; i++) {
+    const deviceID = deviceIds[i]
+    const startDate = new Date('2022-02-15')
+    for (let j = 0; j < 1; j++) {
+      const dateString = moment(startDate).add(j, 'days').format('YYYY-MM-DD')
+      await getHistoryCSV({
+        deviceId: deviceID,
+        date: dateString
+      })
+    }
+  }
 
   // 高屏地區
   const pingDeviceIds = [
@@ -123,11 +167,10 @@ const getHistoryCSV = async (props: { deviceId: string, date: string }) => {
     '12408148923', '11891524424', '11954491464', '11913505644', '11891367361',
     '11890821711', '11954000721', '1954868840', '11890955024'
   ]
-
-  for (let i = 0; i < deviceIds.length; i++) {
-    const deviceID = deviceIds[i]
-    const startDate = new Date('2022-11-01')
-    for (let j = 0; j < 30; j++) {
+  for (let i = 0; i < pingDeviceIds.length; i++) {
+    const deviceID = pingDeviceIds[i]
+    const startDate = new Date('2022-06-30')
+    for (let j = 0; j < 33; j++) {
       const dateString = moment(startDate).add(j, 'days').format('YYYY-MM-DD')
       await getHistoryCSV({
         deviceId: deviceID,
@@ -135,6 +178,7 @@ const getHistoryCSV = async (props: { deviceId: string, date: string }) => {
       })
     }
   }
+
 
 
 })()
