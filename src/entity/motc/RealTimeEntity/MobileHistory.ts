@@ -1,11 +1,14 @@
 import { Column, Entity, Index } from 'typeorm'
-import { UpdateDateColumn } from 'typeorm'
+import { UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm'
 import { Point } from 'geojson'
 
 @Entity('MobileHistory', { schema: 'public' })
 export class MobileHistory {
 
-  @Column("text", { primary: true, name: 'deviceId' })
+  @PrimaryGeneratedColumn("uuid")
+  id!: string
+
+  @Column("text", { name: 'deviceId' })
   deviceId: string
 
   @Column()
