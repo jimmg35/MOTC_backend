@@ -12,7 +12,6 @@ export class MobileHistory {
   deviceId: string
 
   @Column()
-  @UpdateDateColumn()
   updateTime: Date
 
   @Column("double precision", { name: 'pm25UartValue', nullable: true, default: '0' })
