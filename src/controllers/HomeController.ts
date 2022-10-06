@@ -20,7 +20,7 @@ export default class HomeController extends BaseController {
   public routeHttpMethod: { [methodName: string]: HTTPMETHOD; } = {
     "get": "GET",
     "post": "POST",
-    "tests": "GET"
+    // "tests": "GET"
   }
 
   // constructor(dbcontext: WebApiContext) {
@@ -32,10 +32,10 @@ export default class HomeController extends BaseController {
     super()
   }
 
-  @dataMethod()
-  public tests = async (req: Request, res: Response) => {
-    return res.status(OK).json({ status: 'success' })
-  }
+  // @dataMethod()
+  // public tests = async (req: Request, res: Response) => {
+  //   return res.status(OK).json({ status: 'success' })
+  // }
 
   public get = async (req: Request, res: Response) => {
     const params_set = { ...req.query }

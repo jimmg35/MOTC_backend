@@ -7,6 +7,7 @@ import { container } from "tsyringe"
 import sha256 from "fast-sha256"
 import util from "tweetnacl-util"
 import RealTimeProcess from "./residents/RealTimeProcess"
+import HomeController from "./controllers/HomeController"
 
 (async () => {
   // console.log(util.encodeBase64(sha256('jim60308' as any)))
@@ -22,6 +23,7 @@ import RealTimeProcess from "./residents/RealTimeProcess"
   const authController = container.resolve(AuthController)
   const fixedSensorController = container.resolve(FixedSensorController)
   const mobileSensorController = container.resolve(MobileSensorController)
+  const homeController = container.resolve(HomeController)
 
   // 註冊residents
   const realTimeProcess = container.resolve(RealTimeProcess)
@@ -29,7 +31,7 @@ import RealTimeProcess from "./residents/RealTimeProcess"
   // bundle server
   const server = new Server({
     controllers: [
-      userController, authController,
+      userController, authController, homeController,
       fixedSensorController, mobileSensorController],
     residents: [realTimeProcess]
   })
