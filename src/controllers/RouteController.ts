@@ -47,15 +47,16 @@ export default class RouteController extends BaseController {
               // )
             }
             else if (props.rmdays != ''){
-
+              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtentRmdates.format()
             }
         }
         else if (props.weekdays != ''){
             if (props.rmdays ==''){
+              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtentWeekdays.format()
 
             }
             else if (props.rmdays != ''){
-
+              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtentWeekdaysAndRmdates.format()
             }
         }
     }
@@ -65,18 +66,18 @@ export default class RouteController extends BaseController {
         if (props.interval_st < props.interval_et){
             if(props.weekdays ==''){
                 if(props.rmdays == ''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDay.format()
                 }
                 else if (props.rmdays != ''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayRmdates.format()
                 }
             }
             else if (props.weekdays != ''){
                 if (props.rmdays ==''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayWeekdays.format()
                 }
                 else if (props.rmdays != ''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayWeekdaysRmdates.format()
                 }
             }
 
@@ -85,18 +86,18 @@ export default class RouteController extends BaseController {
         else if (props.interval_st > props.interval_et){
             if(props.weekdays ==''){
                 if(props.rmdays == ''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDay.format()
                 }
                 else if (props.rmdays != ''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayRmdates.format()
                 }
             }
             else if (props.weekdays != ''){
                 if (props.rmdays ==''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayWeekdays.format()
                 }
                 else if (props.rmdays != ''){
-    
+                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayWeekdaysRmdates.format()
                 }
             }
         }
