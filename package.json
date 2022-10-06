@@ -9,7 +9,8 @@
     "update": "node --require ts-node/register ./node_modules/typeorm/cli.js migration:run",
     "inspect": "typeorm-model-generator -h 140.122.82.98 -d motcdev -p 5432 -u postgres -x r2tadmiadc -e postgres -o ./inspect-output",
     "download": "ts-node src/historyData/index.ts",
-    "importMobileHistory": "ts-node src/historyData/importMobileHistory.ts"
+    "importMobileHistory": "ts-node src/historyData/importMobileHistory.ts",
+    "importFixedHistory": "ts-node src/historyData/importFixedHistory.ts"
   },
   "author": "",
   "license": "ISC",
