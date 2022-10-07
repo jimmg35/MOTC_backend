@@ -50,11 +50,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -82,11 +82,11 @@ export default class QueryStringStorer {
           )
         FROM(
           SELECT k."deviceId",
- 	          AVG(k."pm25Value") as pm25Value,
- 	          AVG(k."vocValue") as vocVaue,
- 	          AVG(k."temperature") as temperature,
- 	          AVG(k."humidity") as humidty,
- 	          k."coordinate" as coordiate
+ 	          AVG(k."pm25Value") as "pm25Value",
+ 	          AVG(k."vocValue") as "vocValue",
+ 	          AVG(k."temperature") as "temperature",
+ 	          AVG(k."humidity") as "humidty",
+ 	          k."coordinate" as "coordinate"
 	        FROM(
             SELECT  t."deviceId",
                     t."updateTime",
@@ -115,11 +115,11 @@ export default class QueryStringStorer {
           )
         FROM(
           SELECT k."deviceId",
- 	          AVG(k."pm25Value") as pm25Value,
- 	          AVG(k."vocValue") as vocVaue,
- 	          AVG(k."temperature") as temperature,
- 	          AVG(k."humidity") as humidty,
- 	          k."coordinate" as coordiate
+ 	          AVG(k."pm25Value") as "pm25Value",
+ 	          AVG(k."vocValue") as "vocValue",
+ 	          AVG(k."temperature") as "temperature",
+ 	          AVG(k."humidity") as "humidty",
+ 	          k."coordinate" as "coordinate"
 	        FROM(
             SELECT  t."deviceId",
                     t."updateTime",
@@ -148,11 +148,11 @@ export default class QueryStringStorer {
           )
         FROM(
           SELECT k."deviceId",
- 	          AVG(k."pm25Value") as pm25Value,
- 	          AVG(k."vocValue") as vocVaue,
- 	          AVG(k."temperature") as temperature,
- 	          AVG(k."humidity") as humidty,
- 	          k."coordinate" as coordiate
+ 	          AVG(k."pm25Value") as "pm25Value",
+ 	          AVG(k."vocValue") as "vocValue",
+ 	          AVG(k."temperature") as "temperature",
+ 	          AVG(k."humidity") as "humidty",
+ 	          k."coordinate" as "coordinate"
 	        FROM(
             SELECT  t."deviceId",
                     t."updateTime",
@@ -182,11 +182,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -215,11 +215,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -249,11 +249,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -283,11 +283,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -318,11 +318,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -351,11 +351,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -385,11 +385,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
@@ -419,11 +419,11 @@ export default class QueryStringStorer {
           )
         FROM(
             SELECT k."deviceId",
- 	            AVG(k."pm25Value") as pm25Value,
- 	            AVG(k."vocValue") as vocVaue,
- 	            AVG(k."temperature") as temperature,
- 	            AVG(k."humidity") as humidty,
- 	            k."coordinate" as coordiate
+ 	            AVG(k."pm25Value") as "pm25Value",
+ 	            AVG(k."vocValue") as "vocValue",
+ 	            AVG(k."temperature") as "temperature",
+ 	            AVG(k."humidity") as "humidty",
+ 	            k."coordinate" as "coordinate"
 	          FROM(
               SELECT  t."deviceId",
                       t."updateTime",
