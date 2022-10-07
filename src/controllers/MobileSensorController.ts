@@ -24,12 +24,15 @@ export default class MobileSensorController extends BaseController {
   }
 
   public getRealTimeMobile = async (req: Request, res: Response) => {
-    // const props = { ...req.query } as unknown as { xmin: number, ymin: number, xmax: number, ymax: number }
+    const props = { ...req.query } as unknown as { xmin: number, ymin: number, xmax: number, ymax: number }
 
     const result = await this.dbcontext.connection.query(
-      this.queryStringStorer.mobileSensor.getRealTimeMobile
+      this.queryStringStorer.mobileSensor.getRealTimeMobile.format(
+        [props.xmin, props.ymin, props.xmax, props.ymax]
+      )
     )
 
+    
     return res.status(OK).json(result[0]['json_build_object'])
   }
 

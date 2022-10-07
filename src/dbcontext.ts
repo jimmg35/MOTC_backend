@@ -11,6 +11,7 @@ import { RealTimeVoc } from "./entity/motc/RealTimeEntity/RealTimeVoc"
 import { FixedRealTime } from "./entity/motc/RealTimeEntity/FixedRealTime"
 import { MobileRealTime } from "./entity/motc/RealTimeEntity/MobileRealTime"
 import { MobileHistory } from "./entity/motc/RealTimeEntity/MobileHistory"
+import {FixedHistory} from "./entity/motc/RouteEntity/FixedHistory"
 
 export interface IDbConfig {
   type: string
@@ -66,7 +67,7 @@ export class WebApiContext extends DbContext {
         "entities": [
           Role, User, UserThumbnail, FixedSensorInfo, ProjectsInfo,
           RealTimePm25, RealTimeVoc, FixedRealTime, MobileRealTime,
-          MobileHistory
+          MobileHistory,FixedHistory
         ],
         "migrations": [
           "build/migration/*.js"
