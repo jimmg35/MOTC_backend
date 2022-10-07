@@ -16,7 +16,7 @@ export interface IRouteQueryParams {
     interval_st: string
     interval_et: string
     weekdays: string
-    rmdays: string
+    rmdates: string
   }
 
 @autoInjectable()
@@ -37,75 +37,126 @@ export default class RouteController extends BaseController {
 
   public getFixedHistory = async (req: Request, res: Response) => {
     const props = { ...req.query } as unknown as IRouteQueryParams
+    let queryString: string | undefined = undefined
+    // console.log(props)
     //無時段篩選
-    if (props.interval_st ==''|| props.interval_et=='' ){
-        if(props.weekdays ==''){
-            if(props.rmdays == ''){
-              console.log(props)
-              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtent.format(
+    if (props.interval_st ===''|| props.interval_et ==='' ){
+        // console.log('無時段篩選')
+        if(props.weekdays ===''){
+          // console.log('無星期篩選')
+            if(props.rmdates === ''){
+              // console.log('無日期篩選')
+              queryString = this.queryStringStorer.fixedSensor.getQueryWithContinueExtent.format(
+                [props.startDate,props.startTime,props.endDate,props.endTime,props.extent]
+                )
 
               // )
             }
-            else if (props.rmdays != ''){
-              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtentRmdates.format()
+            else if (props.rmdates !== ''){
+              // console.log('有日期篩選')
+               queryString = this.queryStringStorer.fixedSensor.getQueryWithContinueExtentRmdates.format(
+                [props.startDate,props.startTime,props.endDate,props.endTime,props.rmdates,props.extent]
+              )
             }
         }
-        else if (props.weekdays != ''){
-            if (props.rmdays ==''){
-              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtentWeekdays.format()
+        else if (props.weekdays !== ''){
+            // console.log('有星期篩選')
+            if (props.rmdates ===''){
+              // console.log('無日期篩選')
+              queryString = this.queryStringStorer.fixedSensor.getQueryWithContinueExtentWeekdays.format(
+                [props.startDate,props.startTime,props.endDate,props.endTime,props.weekdays,props.extent]
+              )
 
             }
-            else if (props.rmdays != ''){
-              // this.queryStringStorer.fixedSensor.getQueryWithContinueExtentWeekdaysAndRmdates.format()
+            else if (props.rmdates !== ''){
+              // console.log('有日期篩選')
+              queryString = this.queryStringStorer.fixedSensor.getQueryWithContinueExtentWeekdaysAndRmdates.format(
+                [props.startDate,props.startTime,props.endDate,props.endTime,props.weekdays,props.rmdates,props.extent]
+              )
             }
         }
     }
     //有時段篩選
-    else if (props.interval_st != '' || props.interval_et != ''){
+    else if (props.interval_st !== '' && props.interval_et !== ''){
+      // console.log('有時段篩選')
         //時段篩選無跨日
         if (props.interval_st < props.interval_et){
-            if(props.weekdays ==''){
-                if(props.rmdays == ''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDay.format()
+          // console.log('無跨日')
+            if(props.weekdays ===''){
+              // console.log('無星期篩選')
+                if(props.rmdates === ''){
+                  // console.log('無日期篩選')
+                  queryString = this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDay.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.extent]
+                  )
                 }
-                else if (props.rmdays != ''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayRmdates.format()
+                else if (props.rmdates !== ''){
+                  // console.log('有日期篩選')
+                  queryString = this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayRmdates.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.rmdates,props.extent]
+                  )
                 }
             }
-            else if (props.weekdays != ''){
-                if (props.rmdays ==''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayWeekdays.format()
+            else if (props.weekdays !== ''){
+              // console.log('有星期篩選')
+                if (props.rmdates ===''){
+                  // console.log('無日期篩選')
+                  queryString = this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayWeekdays.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.weekdays,props.extent]
+                  )
                 }
-                else if (props.rmdays != ''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayWeekdaysRmdates.format()
+                else if (props.rmdates !== ''){
+                  // console.log('有日期篩選')
+                   queryString= this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentNopassDayWeekdaysRmdates.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.weekdays,props.rmdates,props.extent]
+                   )
                 }
             }
 
         }
         //時段篩選有跨日
         else if (props.interval_st > props.interval_et){
-            if(props.weekdays ==''){
-                if(props.rmdays == ''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDay.format()
+          console.log('有跨日')
+            if(props.weekdays ===''){
+              console.log('無星期篩選')
+                if(props.rmdates === ''){
+                  console.log('無日期篩選')
+                  queryString =  this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDay.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.extent]
+                  )
                 }
-                else if (props.rmdays != ''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayRmdates.format()
+                else if (props.rmdates !== ''){
+                  console.log('有日期篩選')
+                  queryString = this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayRmdates.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.rmdates,props.extent]
+                  )
                 }
             }
-            else if (props.weekdays != ''){
-                if (props.rmdays ==''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayWeekdays.format()
+            else if (props.weekdays !== ''){
+              // console.log('有星期篩選')
+                if (props.rmdates ===''){
+                  // console.log('無日期篩選')
+                  queryString = this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayWeekdays.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.weekdays,props.extent]
+                  )
                 }
-                else if (props.rmdays != ''){
-                  // this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayWeekdaysRmdates.format()
+                else if (props.rmdates !== ''){
+                  // console.log('有日期篩選')
+                  queryString = this.queryStringStorer.fixedSensor.getQueryWithTimeIntervalExtentPassDayWeekdaysRmdates.format(
+                    [props.interval_st,props.interval_et,props.startDate,props.startTime,props.endDate,props.endTime,props.weekdays,props.rmdates,props.extent]
+                  )
                 }
             }
         }
     }
+
+    console.log(queryString)
+    if(!queryString) return  res.status(403)
+
     
-
-
-    // return res.status(OK).json(result[0]['json_build_object'])
+    const result = await this.dbcontext.connection.query(queryString)
+    
+    return res.status(OK).json(result[0]['json_build_object'])
   }
 
 }

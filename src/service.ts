@@ -8,6 +8,7 @@ import sha256 from "fast-sha256"
 import util from "tweetnacl-util"
 import RealTimeProcess from "./residents/RealTimeProcess"
 import HomeController from "./controllers/HomeController"
+import RouteController from "./controllers/RouteController"
 
 (async () => {
   // console.log(util.encodeBase64(sha256('jim60308' as any)))
@@ -24,6 +25,7 @@ import HomeController from "./controllers/HomeController"
   const fixedSensorController = container.resolve(FixedSensorController)
   const mobileSensorController = container.resolve(MobileSensorController)
   const homeController = container.resolve(HomeController)
+  const routeController = container.resolve(RouteController)
 
   // 註冊residents
   const realTimeProcess = container.resolve(RealTimeProcess)
@@ -32,7 +34,7 @@ import HomeController from "./controllers/HomeController"
   const server = new Server({
     controllers: [
       userController, authController, homeController,
-      fixedSensorController, mobileSensorController],
+      fixedSensorController, mobileSensorController, routeController],
     residents: [realTimeProcess]
   })
 
